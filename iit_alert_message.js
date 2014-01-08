@@ -13,7 +13,7 @@
 							content += '<div class="message-body">' + data.body_value + '</div>';
 							content += '</div></div>';
 
-							$('#iit-alert-message').addClass('emergency');
+							$('#iit-alert-message').addClass(data.alert_level.toLowerCase());
 							$('#iit-alert-message').html(content);
 						}
 					}

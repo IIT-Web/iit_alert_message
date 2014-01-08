@@ -40,6 +40,9 @@ function iit_alert_message_json() {
     $query = db_select('node', 'n');
     $query->join('field_data_field_active', 'a', 'n.nid = a.entity_id');
     $query->join('field_data_body', 'b', 'n.nid = b.entity_id');
+    $query->join('field_data_field_alert_level', 'l', 'n.nid = l.entity_id');
+    $query->join('taxonomy_term_data', 't', 'l.field_alert_level_tid = t.tid');
+    $query->addField('t', 'name', 'alert_level');
     $result = $query
       ->fields('n', array('nid', 'title', 'changed'))
       ->fields('a', array('field_active_value'))
