@@ -1,0 +1,66 @@
+<?php
+
+/**
+* @file
+* Provides IIT Alert/Emergency Message Functionality
+*/
+
+// Cache Time in Seconds
+define('IIT_ALERT_MESSAGE_CACHE_INTERVAL', 30);
+
+
+/* ***************************************** */
+/* Hook Implementations                      */
+/* ***************************************** */
+
+/**
+ * Implements hook_menu().
+ */
+function iit_alert_message_menu() {
+  $items['emergency/alerts'] = array(
+    'title' => 'IIT Homepage Alert Message',
+    'page callback' => 'iit_alert_message_json',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for /emergency/alerts.
+ */
+function iit_alert_message_json() {
+  //Get contents from cache if possible.
+  $cache = cache_get('iit_alert_message:message', 'cache_path');
+  if (!empty($cache) && isset($cache->data) && !empty($cache->data) && $cache->expire > REQUEST_TIME) {
+    drupal_json_output($cache->data);
+  } else {
+    //No current cache, generate output
+    $query = db_select('node', 'n');
+    $query->join('field_data_field_active', 'a', 'n.nid = a.entity_id');
+    $query->join('field_data_body', 'b', 'n.nid = b.entity_id');
+    $result = $query
+      ->fields('n', array('nid', 'title', 'changed'))
+      ->fields('a', array('field_active_value'))
+      ->fields('b', array('body_value'))
+      ->condition('n.type', 'homepage_alert_message')
+      ->condition('a.field_active_value', '1', '=')
+      ->orderBy('n.changed', 'DESC')
+      ->range(0,1)
+      ->execute();
+
+    if ($result->rowCount() >= 1) {
+      $outputArray = $result->fetchAssoc();
+      $outputArray['updatedDate'] = format_date($outputArray['changed'], 'custom', 'F j, g:i a T');
+      cache_set('iit_alert_message:message', $outputArray, 'cache_path', REQUEST_TIME + IIT_ALERT_MESSAGE_CACHE_INTERVAL);
+      drupal_json_output($outputArray);
+    } else {
+      $noResult = array('nid' => '0');
+      cache_set('iit_alert_message:message', $noResult, 'cache_path', REQUEST_TIME + IIT_ALERT_MESSAGE_CACHE_INTERVAL);
+      drupal_json_output($noResult);
+    }
+
+  }
+
+}

@@ -1,0 +1,9 @@
+name = IIT Alert Message
+description = Provides IIT Alert/Emergency Message Functionality
+
+core = 7.x
+package = Illinois Institute of Technology
+
+scripts[] = iit_alert_message.js
+
+version = 7.x-0.x-dev
