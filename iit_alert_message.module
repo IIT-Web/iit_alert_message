@@ -17,7 +17,7 @@ define('IIT_ALERT_MESSAGE_CACHE_INTERVAL', 30);
  * Implements hook_menu().
  */
 function iit_alert_message_menu() {
-  $items['emergency/alerts'] = array(
+  $items['api/v1/public/alerts'] = array(
     'title' => 'IIT Homepage Alert Message',
     'page callback' => 'iit_alert_message_json',
     'access arguments' => array('access content'),

@@ -3,7 +3,7 @@
 		attach:function(context) {
 			if ($('#iit-alert-message', context).length) {
 				$.ajax({
-					url: '/emergency/alerts',
+					url: '/api/v1/public/alerts',
 					success: function(data) {
 						if (data.nid !== '0') {
 							// Emergency Message is present
