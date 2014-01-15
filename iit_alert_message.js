@@ -6,7 +6,7 @@
 					url: '/api/v1/public/alerts',
 					success: function(data) {
 						if (data.nid !== '0') {
-							// Emergency Message is present
+							// Alert Message is present
 							var content = '<div class="inner-container"><div id="iit-alert-message-content">';
 							content += '<h1 class="message-title">' + data.title + '</h1>';
 							content += '<h3 class="message-updated">' + 'Updated ' + data.updatedDate + '</h3>';
