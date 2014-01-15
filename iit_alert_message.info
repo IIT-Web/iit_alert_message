@@ -6,4 +6,4 @@ package = Illinois Institute of Technology
 
 scripts[] = iit_alert_message.js
 
-version = 7.x-0.x-dev
+version = 7.x-0.9
