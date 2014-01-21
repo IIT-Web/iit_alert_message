@@ -34,7 +34,10 @@ function iit_alert_message_json() {
   //Get contents from cache if possible.
   $cache = cache_get('iit_alert_message:message', 'cache_path');
   if (!empty($cache) && isset($cache->data) && !empty($cache->data) && $cache->expire > REQUEST_TIME) {
+    drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+    drupal_page_is_cacheable(FALSE);
     drupal_json_output($cache->data);
+    drupal_exit();
   } else {
     //No current cache, generate output
     $query = db_select('node', 'n');
@@ -57,11 +60,17 @@ function iit_alert_message_json() {
       $outputArray = $result->fetchAssoc();
       $outputArray['updatedDate'] = format_date($outputArray['changed'], 'custom', 'F j, g:i a T');
       cache_set('iit_alert_message:message', $outputArray, 'cache_path', REQUEST_TIME + IIT_ALERT_MESSAGE_CACHE_INTERVAL);
+      drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+      drupal_page_is_cacheable(FALSE);
       drupal_json_output($outputArray);
+      drupal_exit();
     } else {
       $noResult = array('nid' => '0');
       cache_set('iit_alert_message:message', $noResult, 'cache_path', REQUEST_TIME + IIT_ALERT_MESSAGE_CACHE_INTERVAL);
+      drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+      drupal_page_is_cacheable(FALSE);
       drupal_json_output($noResult);
+      drupal_exit();
     }
 
   }
