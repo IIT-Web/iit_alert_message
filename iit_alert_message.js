@@ -15,6 +15,11 @@
 
 							$('#iit-alert-message').addClass(data.alert_level.toLowerCase());
 							$('#iit-alert-message').html(content);
+
+							if (data.alert_level.toLowerCase() === 'critical') {
+								$('#homepage-hero-slideshow').css('display', 'none');
+							}
+							
 						}
 					}
 				});
